@@ -1,0 +1,36 @@
+* {
+  font-family: PingFang SC;
+  font-size: 20px;
+  text-decoration: none;
+}
+h1 {
+  text-align: center;
+}
+ul, li, p {
+  margin: 0;
+  padding: 0;
+}
+header {
+  border-bottom: 1px solid #ececec;
+}
+header li {
+  display: inline-block;
+
+}
+header li.logo {
+  margin-right: 20px;
+}
+header a {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 16px;
+  color: rgba(0, 176, 213, .7);
+  transition: all .2s;
+}
+header a:hover {
+  color: rgba(0, 176, 213, 1);
+}
+body > * {
+  width: 90%;
+  margin: auto;
+}
