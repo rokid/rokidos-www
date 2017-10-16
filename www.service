@@ -1,0 +1,9 @@
+[Unit]
+Description=RokidOS WWW service
+
+[Service]
+ExecStart=/usr/bin/www
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
