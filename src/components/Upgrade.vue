@@ -33,7 +33,7 @@ export default {
       extensions: 'img',
       drop: true,
       name: 'file',
-      postAction: 'http://10.88.8.96/upgrade/upload-image',
+      postAction: '/apis/upgrade/upload-image',
       headers: {
         'X-Csrf-Token': 'xxxx'
       }

@@ -110,8 +110,8 @@ int main(void) {
   }
 
   // set endpoint
-  mg_register_http_endpoint(nc, "/ping", ping_handler);
-  mg_register_http_endpoint(nc, "/upgrade/upload-image", upload_image_handler);
+  mg_register_http_endpoint(nc, "/apis/ping", ping_handler);
+  mg_register_http_endpoint(nc, "/apis/upgrade/upload-image", upload_image_handler);
 
   // Set up HTTP server parameters
   mg_set_protocol_http_websocket(nc);
