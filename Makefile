@@ -10,4 +10,6 @@ LD := $(CROSS_COMPILE)g++
 .PHONY: all
 
 all:
-	$(CXX) www.cc -Wall -std=c++11 -lmongoose -o www
+	$(CXX) apis/www.cc -Wall -std=c++11 \
+		-DMG_ENABLE_HTTP_STREAMING_MULTIPART \
+		-lmongoose -lrecovery -o www
