@@ -12,4 +12,4 @@ LD := $(CROSS_COMPILE)g++
 all:
 	$(CXX) apis/www.cc -Wall -std=c++11 \
 		-DMG_ENABLE_HTTP_STREAMING_MULTIPART \
-		-lmongoose -lrecovery -o www
+		-lmongoose -lrecovery -landroid_cutils -o www

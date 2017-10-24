@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <mongoose.h>
 #include <rokid/recovery.h>
+#include <cutils/properties.h>
 
 typedef struct http_message http_message_t;
 typedef struct mg_connection mg_connection_t;
@@ -18,6 +19,15 @@ typedef struct file_writer_data {
 #define UPGRADE_OTA_PATH "/data/ota_upgrade.img"
 
 static struct mg_serve_http_opts s_http_server_opts;
+
+static void recovery() {
+  struct boot_cmd cmd;
+  memset(&cmd, 0, sizeof(cmd));
+  strncpy(cmd.boot_mode, BOOTMODE_RECOVERY, strlen(BOOTMODE_RECOVERY));
+  strncpy(cmd.recovery_path, UPGRADE_OTA_PATH, strlen(UPGRADE_OTA_PATH));
+  strncpy(cmd.recovery_state, BOOTSTATE_READY, strlen(BOOTSTATE_READY));
+  set_recovery_cmd_status(&cmd);
+}
 
 static void ev_handler(mg_connection_t* nc, int ev, void* p) {
   switch (ev) {
@@ -38,13 +48,25 @@ static void ping_handler(mg_connection_t* nc, int ev, void* p) {
   return;
 }
 
-static void recovery() {
-  struct boot_cmd cmd;
-  memset(&cmd, 0, sizeof(cmd));
-  strncpy(cmd.boot_mode, BOOTMODE_RECOVERY, strlen(BOOTMODE_RECOVERY));
-  strncpy(cmd.recovery_path, UPGRADE_OTA_PATH, strlen(UPGRADE_OTA_PATH));
-  strncpy(cmd.recovery_state, BOOTSTATE_READY, strlen(BOOTSTATE_READY));
-  set_recovery_cmd_status(&cmd);
+static void info_handler(mg_connection_t* nc, int ev, void* p) {
+  char version[PROP_VALUE_MAX];
+  char platform[PROP_VALUE_MAX];
+  char date[PROP_VALUE_MAX];
+  property_get("ro.rokid.build.version.release", version, "");
+  property_get("ro.rokid.build.platform", platform, "");
+  property_get("ro.rokid.build.date", date, "");
+  mg_printf(nc,
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: application/json\r\n"
+            "Connection: close\r\n\r\n"
+            "{"
+              "\"version\":\"%s\","
+              "\"platform\":\"%s\","
+              "\"date\":\"%s\""
+            "}\n\n",
+            version, platform, date);
+  nc->flags |= MG_F_SEND_AND_CLOSE;
+  return;
 }
 
 static void upload_image_handler(mg_connection_t* nc, int ev, void* p) {
@@ -111,6 +133,7 @@ int main(void) {
 
   // set endpoint
   mg_register_http_endpoint(nc, "/apis/ping", ping_handler);
+  mg_register_http_endpoint(nc, "/apis/info", info_handler);
   mg_register_http_endpoint(nc, "/apis/upgrade/upload-image", upload_image_handler);
 
   // Set up HTTP server parameters
