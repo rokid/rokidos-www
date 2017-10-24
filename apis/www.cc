@@ -52,9 +52,9 @@ static void info_handler(mg_connection_t* nc, int ev, void* p) {
   char version[PROP_VALUE_MAX];
   char platform[PROP_VALUE_MAX];
   char date[PROP_VALUE_MAX];
-  property_get("ro.rokid.build.version.release", version, "");
-  property_get("ro.rokid.build.platform", platform, "");
-  property_get("ro.rokid.build.date", date, "");
+  property_get("ro.rokid.build.version.release", &version, "");
+  property_get("ro.rokid.build.platform", &platform, "");
+  property_get("ro.rokid.build.date", &date, "");
   mg_printf(nc,
             "HTTP/1.1 200 OK\r\n"
             "Content-Type: application/json\r\n"
