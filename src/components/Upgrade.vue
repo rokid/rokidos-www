@@ -29,6 +29,7 @@ export default {
   name: 'Upgrade',
   data: function () {
     return {
+      target: null,
       files: [],
       extensions: 'img',
       drop: true,
@@ -43,14 +44,22 @@ export default {
     'file-upload': Upload
   },
   methods: {
-    onInputFile (newfile, oldfile) {
-      let target
+    filterFile (newfile, oldfile, prevent) {
       if (!oldfile && newfile) {
-        target = newfile
+        this.target = newfile
       } else if (oldfile && newfile) {
-        target = newfile
+        this.target = newfile
+      } else {
+        this.target = null
       }
-      if (target && !this.$refs.upload.active) {
+      if (this.target && this.target.name !== 'rokid_upgrade_package.img') {
+        alert('请上传 rokid_upgrade_package.img')
+        return prevent()
+      }
+    },
+    onInputFile (newfile, oldfile) {
+      console.log(newfile, oldfile)
+      if (this.target && !this.$refs.upload.active) {
         this.$refs.upload.active = true
       }
     }

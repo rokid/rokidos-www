@@ -55,6 +55,7 @@ static void info_handler(mg_connection_t* nc, int ev, void* p) {
   property_get("ro.rokid.build.version.release", (char*)&version, "");
   property_get("ro.rokid.build.platform", (char*)&platform, "");
   property_get("ro.rokid.build.date", (char*)&date, "");
+  fprintf(stdout, "version: %s, platform: %s\n", version, platform);
   mg_printf(nc,
             "HTTP/1.1 200 OK\r\n"
             "Content-Type: application/json\r\n"
