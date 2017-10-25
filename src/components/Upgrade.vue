@@ -39,7 +39,7 @@ export default {
       headers: {
         'X-Csrf-Token': 'xxxx'
       },
-      upgradeDone: null,
+      upgradeDone: null
     }
   },
   components: {
@@ -63,7 +63,7 @@ export default {
       if (this.$refs.upload.active) {
         // check if the network error, it's start
         if (newfile.error === 'network' && !oldfile.error) {
-          this.checkAlive();
+          this.checkAlive()
         }
       } else if (this.target) {
         this.$refs.upload.active = true
@@ -71,12 +71,12 @@ export default {
     },
     checkAlive () {
       this.$http.get('/apis/ping', {timeout: 1000}).then(() => {
-        this.upgradeDone = true;
-        alert('恭喜！系统升级完成');
-        location.reload();
+        this.upgradeDone = true
+        alert('恭喜！系统升级完成')
+        location.reload()
       }, () => {
-        this.checkAlive();
-      });
+        this.checkAlive()
+      })
     }
   }
 }
