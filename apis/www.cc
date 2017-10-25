@@ -27,6 +27,7 @@ static void recovery() {
   strncpy(cmd.recovery_path, UPGRADE_OTA_PATH, strlen(UPGRADE_OTA_PATH));
   strncpy(cmd.recovery_state, BOOTSTATE_READY, strlen(BOOTSTATE_READY));
   set_recovery_cmd_status(&cmd);
+  system("reboot");
 }
 
 static void ev_handler(mg_connection_t* nc, int ev, void* p) {
@@ -52,10 +53,11 @@ static void info_handler(mg_connection_t* nc, int ev, void* p) {
   char version[PROP_VALUE_MAX];
   char platform[PROP_VALUE_MAX];
   char date[PROP_VALUE_MAX];
+  char time[PROP_VALUE_MAX];
   property_get("ro.rokid.build.version.release", (char*)&version, "");
   property_get("ro.rokid.build.platform", (char*)&platform, "");
   property_get("ro.rokid.build.date", (char*)&date, "");
-  fprintf(stdout, "version: %s, platform: %s\n", version, platform);
+  property_get("ro.rokid.build.time", (char*)&time, "");
   mg_printf(nc,
             "HTTP/1.1 200 OK\r\n"
             "Content-Type: application/json\r\n"
@@ -63,9 +65,9 @@ static void info_handler(mg_connection_t* nc, int ev, void* p) {
             "{"
               "\"version\":\"%s\","
               "\"platform\":\"%s\","
-              "\"date\":\"%s\""
+              "\"date\":\"%s %s\""
             "}\n\n",
-            version, platform, date);
+            version, platform, date, time);
   nc->flags |= MG_F_SEND_AND_CLOSE;
   return;
 }
@@ -115,7 +117,6 @@ static void upload_image_handler(mg_connection_t* nc, int ev, void* p) {
       free(data);
       nc->user_data = NULL;
       recovery();
-      system("reboot");
       break;
     }
   }

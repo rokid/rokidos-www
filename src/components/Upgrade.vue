@@ -9,7 +9,8 @@
         :drop="drop"
         :headers="headers"
         v-model="files"
-        @input-file="onInputFile">
+        @input-file="onInputFile"
+        @input-filter="filterFile">
         <div>选择你要升级的镜像并上传</div>
       </file-upload>
     </div>
