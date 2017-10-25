@@ -38,7 +38,8 @@ export default {
       postAction: '/apis/upgrade/upload-image',
       headers: {
         'X-Csrf-Token': 'xxxx'
-      }
+      },
+      upgradeDone: null,
     }
   },
   components: {
@@ -59,10 +60,23 @@ export default {
       }
     },
     onInputFile (newfile, oldfile) {
-      console.log(newfile, oldfile)
-      if (this.target && !this.$refs.upload.active) {
+      if (this.$refs.upload.active) {
+        // check if the network error, it's start
+        if (newfile.error === 'network' && !oldfile.error) {
+          this.checkAlive();
+        }
+      } else if (this.target) {
         this.$refs.upload.active = true
       }
+    },
+    checkAlive () {
+      this.$http.get('/apis/ping', {timeout: 1000}).then(() => {
+        this.upgradeDone = true;
+        alert('恭喜！系统升级完成');
+        location.reload();
+      }, () => {
+        this.checkAlive();
+      });
     }
   }
 }
