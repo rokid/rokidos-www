@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <mongoose.h>
-#include <rokid/recovery.h>
+#include <recovery/recovery.h>
 #include <cutils/properties.h>
 
 typedef struct http_message http_message_t;
