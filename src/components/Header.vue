@@ -13,7 +13,15 @@
       <li>
         <router-link to="/upgrade">系统升级</router-link>
       </li>
-      <li><a target="_blank" href="https://rokid.github.io/rokidos-linux-docs/">文档</a></li>
+      <li>
+        <a target="_blank" href="https://developer.rokid.com/docs/rokidos-linux-docs/source/getting_started/overview.html">使用文档</a>
+      </li>
+      <li>
+        <a target="_blank" href="https://forum.rokid.com/">讨论区</a>
+      </li>
+      <li>
+        <a target="_blank" href="https://github.com/Rokid">GitHub</a>
+      </li>
     </ul>
   </header>
 </template>
