@@ -105,4 +105,8 @@ var server = http.createServer((request, response) => {
   }
 });
 
-server.listen(process.env.PORT || 80);
+// make sure if upgrade dir is exists
+exec(`rm -rf ${localImagePathname} && mkdir -p ${localImagePathname}`, () => {
+  server.listen(process.env.PORT || 80);
+});
+
