@@ -43,12 +43,14 @@ var routes = {
 
   '/apis/image/upload': (request, response) => {
     var imageFile = fs.createWriteStream(`${localImagePathname}/upgrade.img`);
-    imageFile.on('finish', () => response.end());
+    imageFile.on('finish', () => {
+      response.json({ status: 'complete' });
+    });
     request.pipe(imageFile);
   },
 
   '/apis/image/upgrade': (request, response) => {
-    fs.exists(`${localImagePathname}/complete.stamp`, (exists) => {
+    fs.exists(`${localImagePathname}/upgrade.img`, (exists) => {
       if (!exists) {
         response.writeHead(400);
         response.json({
