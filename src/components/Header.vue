@@ -1,7 +1,9 @@
 <template>
   <header id="rokid-header">
     <ul>
-      <li class="logo"><h1>RokidOS</h1></li>
+      <li class="logo">
+        <router-link to="/">RokidOS</router-link>
+      </li>
       <li>
         <router-link to="/">首页</router-link>
       </li>
@@ -30,29 +32,42 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #rokid-header {
-  background: rgba(0, 176, 213, .1);
+  background: #f6f6f6;
 }
 #rokid-header ul {
   width: 80%;
   margin: auto;
   text-align: left;
+  display: flex;
 }
 #rokid-header li {
-  display: inline-block;
-}
-#rokid-header .logo {
-  color: rgba(0, 176, 213, .7);
-  margin-right: 50px;
+  display: flex;
 }
 #rokid-header li > a {
+  display: flex;
+  height: 80px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
   transition: all .3s;
-  display: inline-block;
   text-align: center;
   text-decoration: none;
-  color: #474747;
-  padding: 0 20px;
+  color: #2c3e50;
+  font-size: 16px;
 }
 #rokid-header li > a:hover {
-  color: rgba(0, 176, 213, .7);
+  background-color: #68c5df;
+  color: #fff;
+}
+#rokid-header .logo > a{
+  font-size: 30px;
+  font-weight: 700;
+  color: #68c5df;
+  margin-right: 50px;
+}
+#rokid-header .logo > a:hover {
+  background-color: inherit;
+  color: #68c5df;
+  transform: scale(1.3);
 }
 </style>
