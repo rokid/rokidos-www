@@ -30,6 +30,13 @@ var routes = {
 
     exec(command, (err, stdout, stderr) => {
       console.log(err, stdout, stderr);
+      if (err) {
+        response.writeHead(500);
+        response.json({
+          message: err.message,
+        });
+        return;
+      }
       response.json({ status: 'complete' });
     });
   },
