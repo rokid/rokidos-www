@@ -92,7 +92,7 @@ export default {
       extensions: 'img',
       drop: true,
       name: 'file',
-      postAction: '/apis/upload',
+      postAction: '/apis/image/upload',
       headers: {
         'X-Csrf-Token': 'xxxx'
       }
@@ -224,12 +224,12 @@ export default {
           type: 'warning'
         }).then(() => {
           // 开始更新系统
-          this.axios.PATCH('/apis/upgrade')
+          this.axios.patch('/apis/image/upgrade')
           .then((response) => {
             this.uploadView.downloadStep = 'updating'
             setTimeout(() => {
               this.checkAlive()
-            }, 0)
+            }, response.data.delay || 3000)
           }).catch(() => {
             this.$alert('网络错误，请重试')
           })
@@ -329,7 +329,7 @@ ul {
 }
 .upgrade-list .title .upgrade-upload-btn {
   position: absolute;
-  right: 17px;
+  right: 18px;
 }
 .upgrade-list .title .upload-btn {
   font-size: 12px;
