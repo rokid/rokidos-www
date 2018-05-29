@@ -52,6 +52,7 @@ export default {
   display: flex;
 }
 #rokid-header li > a {
+  position: relative;
   display: flex;
   height: 80px;
   padding: 0 20px;
@@ -66,6 +67,20 @@ export default {
 #rokid-header li > a:hover {
   background-color: #68c5df;
   color: #fff;
+}
+#rokid-header li .router-link-exact-active::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 50%;
+  bottom: 0;
+  margin-left: -16px;
+  border: 16px solid transparent;
+  border-bottom-color: #fff;
+}
+#rokid-header .logo a::before {
+  display: none;
 }
 #rokid-header .logo > a{
   font-size: 30px;
