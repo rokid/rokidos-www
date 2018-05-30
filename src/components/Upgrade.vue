@@ -36,11 +36,9 @@
             <div class="change-log">
               <p>升级镜像：<a :href="img.imageUri.upgrade">{{img.imageUri.upgrade}}</a></p>
               <p>刷机镜像：<a :href="img.imageUri.flush">{{img.imageUri.flush}}</a></p>
+              <br />
               <p>更新日志：</p>
-              <ul>
-                <li>修复了很多很多bug</li>
-                <li>反正也不知道是什么bug</li>
-              </ul>
+              <div v-html="markdown(img.readme)"></div>
             </div>
           </li>
         </transition-group>
@@ -68,6 +66,8 @@
 
 <script>
 import Upload from 'vue-upload-component'
+import {markdown} from 'markdown'
+
 export default {
   name: 'Upgrade',
   data () {
@@ -260,6 +260,10 @@ export default {
         clearInterval(handle)
         this.uploadView.downloadStep = 'error'
       })
+    },
+    markdown (md) {
+      var mark = md.replace(/<!--\S*-->/gi, '')
+      return markdown.toHTML(mark)
     }
   },
   mounted () {
@@ -293,6 +297,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.upgrade-list .list .item .change-log ul {
+  padding-left: 20px;
+}
+</style>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
@@ -329,7 +339,7 @@ ul {
 }
 .upgrade-list .title .upgrade-upload-btn {
   position: absolute;
-  right: 18px;
+  right: 17px;
 }
 .upgrade-list .title .upload-btn {
   font-size: 12px;
@@ -406,6 +416,8 @@ ul {
   border-radius: 0 0 5px 5px;
   word-break: break-all;
 }
+
+
 .notice-loading {
   margin-left: 5px;
 }
