@@ -6,6 +6,9 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var property = require('./property.node');
 var recovery = require('./recovery.node');
+var Media = require('./modules/media/index.js');
+
+var media = new Media();
 
 var localImagePathname = '/data/upgrade';
 var webroot = '/opt/www';
@@ -68,6 +71,26 @@ var routes = {
       response.json({ status: 'complete', delay: timeout });
     });
   },
+
+  '/apis/media/say': (request, response) => {
+    var params = url.parse(request.url, true);
+    if (params.query.text) {
+      media.say(params.query.text).then(() => {
+        response.json({
+          status: 'complete'
+        })
+      }).catch(() => {
+        response.json({
+          status: 'error'
+        })
+      })
+    }else{
+      response.json({
+        status: 'error',
+        message: 'text was expected'
+      })
+    }
+  }
 };
 
 var server = http.createServer((request, response) => {
