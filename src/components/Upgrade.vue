@@ -245,7 +245,7 @@ export default {
       var percent = 0
       this.uploadView.downloadStep = 'downloading'
       handle = setInterval(() => {
-        percent++
+        percent += 10
         if (percent >= 99) {
           percent = 99
         }
@@ -256,9 +256,14 @@ export default {
       .then((response) => {
         clearInterval(handle)
         this.uploadView.downloadStep = 'downloaded'
-      }).catch(() => {
+      }).catch((error) => {
         clearInterval(handle)
         this.uploadView.downloadStep = 'error'
+        if (error.response.data && error.response.data.message) {
+          this.$alert(error.response.data.message, '下载错误')
+        } else {
+          this.$alert('未知的网络错误', '下载错误')
+        }
       })
     },
     markdown (md) {

@@ -19,6 +19,12 @@ $ npm run build
 $ npm run dev
 ```
 
+## RokidOS 安装
+
+因为使用了 EventHandler.js，需要把 `EventHandler.js` 复制到 rokidOS
+
+cp lib/EventHandler.js /data/plugins/
+
 ## License
 
 Apeach v2.0

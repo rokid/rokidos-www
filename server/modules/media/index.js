@@ -31,6 +31,9 @@ Media.prototype.start = function () {
         this.on('onTtsComplete', (id) => {
             this.emit(`tts:complete:${id}`)
         })
+        this.on('onMediaComplete', (id) => {
+            this.emit(`media:complete:${id}`)
+        })
     })
 }
 
@@ -95,6 +98,16 @@ Media.prototype.say = function (text, option) {
         this.remoteCall('tts', [text], DBUS_TARGET_PATH, DBUS_TARGET_INTERFACE, webappId)
         .then((id) => {
             this.once(`tts:complete:${id}`, resolve)
+        })
+        .catch(reject)
+    })
+}
+
+Media.prototype.play = function (url) {
+    return new Promise((resolve, reject) => {
+        this.remoteCall('media', [url], DBUS_TARGET_PATH, DBUS_TARGET_INTERFACE, webappId)
+        .then((id) => {
+            this.once(`media:complete:${id}`, resolve);
         })
         .catch(reject)
     })

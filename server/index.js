@@ -2,6 +2,7 @@
 
 var http = require('http');
 var url = require('url');
+var path = require('path');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var property = require('./property.node');
@@ -12,6 +13,22 @@ var media = new Media();
 
 var localImagePathname = '/data/upgrade';
 var webroot = '/opt/www';
+
+var mimeTypes = {
+  "css": "text/css; charset=UTF-8",
+  "gif": "image/gif",
+  "html": "text/html; charset=UTF-8",
+  "ico": "image/x-icon",
+  "jpeg": "image/jpeg",
+  "png": "image/png",
+  "js": "application/javascript; charset=UTF-8"
+};
+
+var lookupMine = function (pathName) {
+  var ext = path.extname(pathName);
+  ext = ext.split('.').pop();
+  return mimeTypes[ext] || mimeTypes['txt'];
+}
 
 var routes = {
 
@@ -81,7 +98,8 @@ var routes = {
         })
       }).catch(() => {
         response.json({
-          status: 'error'
+          status: 'error',
+          message: 'tts error'
         })
       })
     }else{
@@ -90,6 +108,52 @@ var routes = {
         message: 'text was expected'
       })
     }
+  },
+  '/apis/media/play': (request, response) => {
+    var params = url.parse(request.url, true);
+    if (params.query.url) {
+      media.play(params.query.url).then(() => {
+        response.json({
+          status: 'complete'
+        })
+      }).catch(() => {
+        response.json({
+          status: 'error',
+          message: 'play error'
+        })
+      })
+    }else{
+      response.json({
+        status: 'error',
+        message: 'url was expected'
+      })
+    }
+  },
+  '/apis/sse/speech': (request, response) => {
+    response.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      "Access-Control-Allow-Origin": "*",
+      "Connection": "keep-alive"
+    })
+    var padding = new Array(2049);
+    response.write(":" + padding.join(" ") + "\n"); // 2kB padding for IE
+    response.write("retry: 2000\n");
+    var t = setInterval(() => {
+      response.write(': keep-alive\n')
+    }, 10000)
+    function handle(e) {
+      var data = JSON.parse(e || '{}')
+      if (data.event) {
+        response.write(`event: ${data.event}\n`)
+        response.write('data: ' + JSON.stringify(data) + '\n\n')
+      }
+    }
+    media.on('speech', handle)
+    response.on('close', () => {
+      clearInterval(t)
+      media.removeListener('speech', handle)
+    })
   }
 };
 
@@ -117,9 +181,14 @@ var server = http.createServer((request, response) => {
           response.end();
           return;
         }
-        fs.readFile(localUrl, (err, data) => {
-          response.end(data);
+        response.writeHead(200, {
+          "Content-Type": lookupMine(localUrl)
         });
+        
+        fs.readFile(localUrl, (error, data) => {
+          response.write(data);
+          response.end();
+        })
       });
     }
   } else {
